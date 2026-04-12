@@ -20,6 +20,7 @@ def test_migrate_requires_palace_database(tmp_path, capsys):
 def test_migrate_aborts_without_confirmation(tmp_path, capsys):
     palace_dir = tmp_path / "palace"
     palace_dir.mkdir()
+    # Presence of chroma.sqlite3 is the safety gate; validity is mocked below.
     (palace_dir / "chroma.sqlite3").write_text("db")
 
     mock_chromadb = SimpleNamespace(

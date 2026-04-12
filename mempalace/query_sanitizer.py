@@ -27,6 +27,7 @@ logger = logging.getLogger("mempalace_mcp")
 MAX_QUERY_LENGTH = 250  # Above this, prompt contamination increasingly dominates
 SAFE_QUERY_LENGTH = 200  # Below this, query is almost certainly clean
 MIN_QUERY_LENGTH = 10  # Extracted result shorter than this = extraction failed
+QUOTE_CHARS = {"'", '"'}
 
 # Sentence splitter: split on . ! ? (including fullwidth) and newlines
 _SENTENCE_SPLIT = re.compile(r"[.!?。！？\n]+")
@@ -69,13 +70,13 @@ def sanitize_query(raw_query: str) -> dict:
 
     def _strip_wrapping_quotes(candidate: str) -> str:
         candidate = candidate.strip()
-        while len(candidate) >= 2 and candidate[:1] in {"'", '"'} and candidate[-1:] in {"'", '"'}:
+        while len(candidate) >= 2 and candidate[:1] in QUOTE_CHARS and candidate[-1:] in QUOTE_CHARS:
             candidate = candidate[1:-1].strip()
             if not candidate:
                 return ""
-        if candidate[:1] in {"'", '"'}:
+        if candidate[:1] in QUOTE_CHARS:
             candidate = candidate[1:].strip()
-        if candidate[-1:] in {"'", '"'}:
+        if candidate[-1:] in QUOTE_CHARS:
             candidate = candidate[:-1].strip()
         return candidate
 
